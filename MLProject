@@ -1,0 +1,40 @@
+name : test
+
+python_env : test_env.yaml
+
+
+entry_points:
+	main:
+		parameters:    	
+	    	img:
+	    		type: int
+	    		default: 640
+	    		
+	    	batch:   
+	    		type:    int
+	    		default: -1
+    		
+    		
+	    	epochs:  
+	    		type: int 
+	    		default: 3
+    		
+	    	data:    
+	    		type: path
+	    		default: 'aic.yaml'
+    		
+	    	weights: 
+	    		type: path
+	    		default: './best.pt'
+
+
+
+
+
+	command: "python3 yolov5/train.py \
+		--img {img}   \
+    	--batch {batch} \
+    	--epochs {epochs} \
+    	--data {data} \
+    	--weights {weights}"
+
