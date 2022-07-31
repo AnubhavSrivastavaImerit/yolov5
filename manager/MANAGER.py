@@ -48,13 +48,3 @@ class manager:
     def __del__(self):
         self.log_artifact("./dataset.txt","./")
         mlflow.end_run()
-
-    
-
-
-
-
-
-
-
-
