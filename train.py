@@ -29,6 +29,10 @@ import torch.nn as nn
 import yaml
 from torch.optim import lr_scheduler
 from tqdm import tqdm
+from manager.MANAGER import manager
+
+mlops_manager = manager()
+
 
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0]  # YOLOv5 root directory
@@ -60,6 +64,11 @@ LOCAL_RANK = int(os.getenv('LOCAL_RANK', -1))  # https://pytorch.org/docs/stable
 RANK = int(os.getenv('RANK', -1))
 WORLD_SIZE = int(os.getenv('WORLD_SIZE', 1))
 
+
+tags = ['train/box_loss', 'train/obj_loss', 'train/cls_loss', # train_loss
+        'metrics/precision', 'metrics/recall', 'metrics/mAP_0.5', 'metrics/mAP_0.5:0.95',
+        'val/box_loss', 'val/obj_loss', 'val/cls_loss',  #val_loss
+        'x/lr0', 'x/lr1', 'x/lr2']  #params
 
 def train(hyp, opt, device, callbacks):  # hyp is path/to/hyp.yaml or hyp dictionary
     save_dir, epochs, batch_size, weights, single_cls, evolve, data, cfg, resume, noval, nosave, workers, freeze = \
@@ -413,8 +422,15 @@ def train(hyp, opt, device, callbacks):  # hyp is path/to/hyp.yaml or hyp dictio
                 stop = broadcast_list[0]
         if stop:
             break  # must break all DDP ranks
-
+        
+        for x, tag in zip(list(mloss[:-1]) + list(results) + lr, tags):
+            # existing code (...)
+            tag = re.sub('[^a-zA-Z0-9\/\_\-\. ]', '-', tag)
+            # we remove not allowed characters from the tags.
+            mlops_manager.log_metric(tag, float(x))
+        
         # end epoch ----------------------------------------------------------------------------------------------------
+    mlops_manager.log_artifacts(W)
     # end training -----------------------------------------------------------------------------------------------------
     if RANK in {-1, 0}:
         LOGGER.info(f'\n{epoch - start_epoch + 1} epochs completed in {(time.time() - t0) / 3600:.3f} hours.')
