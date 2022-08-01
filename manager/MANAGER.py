@@ -45,6 +45,10 @@ class manager:
     def log_artifacts(self,dir:str):
         self.client.log_artifacts(self.run.run_id,dir,"./")
         return
+    
+    def log_metric(self,key,value):
+        self.client.log_metric(self.run.run_id,key,value)
+        return
 
     def __del__(self):
         self.log_artifact("./dataset.txt","./")
