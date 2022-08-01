@@ -25,14 +25,10 @@ entry_points:
                 type: path
                 default: './best.pt'
 
-
-
-
-
-    command: "python3 yolov5/train.py \
-        --img {img}   \
-        --batch {batch} \
-        --epochs {epochs} \
-        --data {data} \
-        --weights {weights}"
+        command: "python3 yolov5/train.py \
+            --img {img}   \
+            --batch {batch} \
+            --epochs {epochs} \
+            --data {data} \
+            --weights {weights}"
 
