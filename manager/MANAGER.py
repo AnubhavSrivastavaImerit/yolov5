@@ -22,6 +22,7 @@ class manager:
         
         self.client =  MlflowClient()
         experiment = mlflow.get_experiment_by_name(os.environ["EXPERIMENT-NAME"] )
+        print("Experiment : ",experiment)
         # Need to check how to set experiemnt id
         self.run = self.client.create_run(experiment.experiment_id)
         print("Name: {}".format(experiment.name))
