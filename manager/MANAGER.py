@@ -31,25 +31,25 @@ class manager:
         print("Lifecycle_stage: {}".format(experiment.lifecycle_stage))
         print("Running experiement with uuid  : {} ".format(self.run.info.run_id, ))
 
-        mlflow.start_run()
+        #mlflow.start_run()
 
 
     def log_param(self,key,value):
-        self.client.log_param(self.run.run_id,key,value)
+        self.client.log_param(self.run.info.run_id,key,value)
         return
 
     def log_artifact(self,path):
-        self.client.log_artifact(self.run.run_id,path,"./")
+        self.client.log_artifact(self.run.info.run_id,path,"artifacts")
         return
 
     def log_artifacts(self,dir:str):
-        self.client.log_artifacts(self.run.run_id,dir,"./")
+        self.client.log_artifacts(self.run.info.run_id,dir,"artifacts")
         return
     
     def log_metric(self,key,value):
-        self.client.log_metric(self.run.run_id,key,value)
+        self.client.log_metric(self.run.info.run_id,key,value)
         return
 
     def __del__(self):
-        self.log_artifact("./dataset.txt","./")
-        mlflow.end_run()
+        self.log_artifact("./dataset.txt")
+        #mlflow.end_run()
